@@ -2863,6 +2863,10 @@ docker_build_agent7_windows1809:
     - cp ${OMNIBUS_PACKAGE_DIR}/datadog-agent-7*-x86_64.zip ${BUILD_CONTEXT}/datadog-agent-7-latest.amd64.zip
     - cp entrypoint.exe ${BUILD_CONTEXT}/entrypoint.exe
     - get-childitem ${BUILD_CONTEXT}
+      # DockerHub login
+    - $DOCKER_REGISTRY_LOGIN = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_LOGIN_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - $DOCKER_REGISTRY_PWD = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_PWD_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - powershell -Command "docker login --username ${DOCKER_REGISTRY_LOGIN} --password ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY_URL}"
     - powershell -Command "docker build ${BUILD_ARG} --pull --file ${BUILD_CONTEXT}/windows/amd64/Dockerfile --tag ${TARGET_TAG} ${BUILD_CONTEXT}"
     - If ($lastExitCode -ne "0") { throw "Previous command returned $lastExitCode" }
     - docker push ${TARGET_TAG}
@@ -2892,6 +2896,10 @@ docker_build_agent7_windows1809_jmx:
     - cp ${OMNIBUS_PACKAGE_DIR}/datadog-agent-7*-x86_64.zip ${BUILD_CONTEXT}/datadog-agent-7-latest.amd64.zip
     - cp entrypoint.exe ${BUILD_CONTEXT}/entrypoint.exe
     - get-childitem ${BUILD_CONTEXT}
+      # DockerHub login
+    - $DOCKER_REGISTRY_LOGIN = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_LOGIN_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - $DOCKER_REGISTRY_PWD = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_PWD_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - powershell -Command "docker login --username ${DOCKER_REGISTRY_LOGIN} --password ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY_URL}"
     - powershell -Command "docker build ${BUILD_ARG} --pull --file ${BUILD_CONTEXT}/windows/amd64/Dockerfile --tag ${TARGET_TAG} ${BUILD_CONTEXT}"
     - If ($lastExitCode -ne "0") { throw "Previous command returned $lastExitCode" }
     - docker push ${TARGET_TAG}
@@ -2922,6 +2930,10 @@ docker_build_agent7_windows1909:
     - cp ${OMNIBUS_PACKAGE_DIR}/datadog-agent-7*-x86_64.zip ${BUILD_CONTEXT}/datadog-agent-7-latest.amd64.zip
     - cp entrypoint.exe ${BUILD_CONTEXT}/entrypoint.exe
     - get-childitem ${BUILD_CONTEXT}
+      # DockerHub login
+    - $DOCKER_REGISTRY_LOGIN = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_LOGIN_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - $DOCKER_REGISTRY_PWD = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_PWD_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - powershell -Command "docker login --username ${DOCKER_REGISTRY_LOGIN} --password ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY_URL}"
     - powershell -Command "docker build ${BUILD_ARG} --pull --file ${BUILD_CONTEXT}/windows/amd64/Dockerfile --tag ${TARGET_TAG} ${BUILD_CONTEXT}"
     - If ($lastExitCode -ne "0") { throw "Previous command returned $lastExitCode" }
     - docker push ${TARGET_TAG}
@@ -2951,6 +2963,10 @@ docker_build_agent7_windows1909_jmx:
     - cp ${OMNIBUS_PACKAGE_DIR}/datadog-agent-7*-x86_64.zip ${BUILD_CONTEXT}/datadog-agent-7-latest.amd64.zip
     - cp entrypoint.exe ${BUILD_CONTEXT}/entrypoint.exe
     - get-childitem ${BUILD_CONTEXT}
+      # DockerHub login
+    - $DOCKER_REGISTRY_LOGIN = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_LOGIN_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - $DOCKER_REGISTRY_PWD = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_PWD_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
+    - powershell -Command "docker login --username ${DOCKER_REGISTRY_LOGIN} --password ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY_URL}"
     - powershell -Command "docker build ${BUILD_ARG} --pull --file ${BUILD_CONTEXT}/windows/amd64/Dockerfile --tag ${TARGET_TAG} ${BUILD_CONTEXT}"
     - If ($lastExitCode -ne "0") { throw "Previous command returned $lastExitCode" }
     - docker push ${TARGET_TAG}
@@ -3101,7 +3117,7 @@ twistlock_scan-7:
       # DockerHub login
       `$DOCKER_REGISTRY_LOGIN = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_LOGIN_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
       `$DOCKER_REGISTRY_PWD = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DOCKER_REGISTRY_PWD_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
-      docker login --username "`${DOCKER_REGISTRY_LOGIN}" --password "`${DOCKER_REGISTRY_PWD}" "${DOCKER_REGISTRY_URL}"
+      docker login --username ${DOCKER_REGISTRY_LOGIN} --password ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY_URL}
       If (`$lastExitCode -ne "0") { throw "Previous command returned `$lastExitCode" }
       # DockerHub image signing
       `$Env:DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE = aws ssm get-parameter --region us-east-1 --name ci.datadog-agent.${DELEGATION_PASS_SSM_KEY} --with-decryption --query "Parameter.Value" --out text
